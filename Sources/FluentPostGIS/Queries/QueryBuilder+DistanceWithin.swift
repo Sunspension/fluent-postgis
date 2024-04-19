@@ -52,6 +52,24 @@ extension QueryBuilder {
             SQLColumn(QueryBuilder.path(distance))
         )
     }
+    
+    @discardableResult
+    public func filterGeographyDistanceWithin<ModelSchema, Field>(
+        _ field: KeyPath<ModelSchema, Field>,
+        _ value: Field.Value,
+        _ distance: Double
+    ) -> Self
+    where ModelSchema: Schema,
+          Field: QueryableProperty,
+          Field.Model == ModelSchema,
+          Field.Value: GeometryConvertible
+    {
+        self.filterDistanceWithin(
+            SQLColumn(QueryBuilder.path(field)),
+            QueryBuilder.queryExpressionGeography(value),
+            SQLLiteral.numeric(String(distance))
+        )
+    }
 }
 
 extension QueryBuilder {

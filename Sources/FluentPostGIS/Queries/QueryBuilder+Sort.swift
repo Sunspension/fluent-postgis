@@ -21,6 +21,22 @@ extension QueryBuilder {
             QueryBuilder.queryExpressionGeometry(value)
         )
     }
+    
+    @discardableResult
+    public func sortByDistance<ModelSchema, Field>(
+        _ field: KeyPath<ModelSchema, Field>,
+        _ value: Field.Value
+    ) -> Self
+    where ModelSchema: Schema,
+          Field: QueryableProperty,
+          Field.Model == ModelSchema,
+          Field.Value: GeometryConvertible
+    {
+        self.sortByDistance(
+            SQLColumn(QueryBuilder.path(field)),
+            QueryBuilder.queryExpressionGeography(value)
+        )
+    }
 }
 
 extension QueryBuilder {
